@@ -47,7 +47,8 @@ with tabs[1]:
         polar=dict(
             radialaxis=dict(showline=False, range=[0, 10]),
         ),
-        showlegend=False
+        showlegend=False,
+        dragmode=False
     )
     st.subheader('RESULTADO DA AUTOANÁLISE')
     st.plotly_chart(fig_1, use_container_width=True, config={'displayModeBar':False})
@@ -147,7 +148,8 @@ with tabs[3]:
         polar=dict(
             radialaxis=dict(showline=False, range=[0, 10]),
         ),
-        showlegend=False
+        showlegend=False,
+        dragmode=False
     )
     st.subheader('RESULTADO DA PROGAMAÇÃO')
     st.plotly_chart(fig_4, use_container_width=True, config={'displayModeBar':False})
