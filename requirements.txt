@@ -1,4 +1,6 @@
 kaleido
+openai
 pandas
+pdfkit
 plotly
 streamlit

@@ -4,28 +4,58 @@ import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 from io import BytesIO
-from pdf_utils import generate_pdf
-from score import calcular_score_ontem, calcular_score_amanha
+from utils.pdf_utils import PDFGenerator
+from utils.score_utils import calcular_score_ontem, calcular_score_amanha
 
-tabs = st.tabs(['1.AUTOANÁLISE', '2.MENSURAÇÃO', '3.PONTUAÇÃO', '4.PROGRAMAÇÃO', '5.COMPROMISSO', '6.RELATÓRIO'])
+def plot_gauge(score, title, max_val, labels, colors):
+    fig = go.Figure(go.Indicator(
+        mode="gauge+number",
+        value=score,
+        title={'text': title},
+        domain={'x': [0, 1], 'y': [0, 1]},
+        gauge={
+            'axis': {'range': [0, max_val]},
+            'bar': {'color': '#EE7798'},
+            'steps': [
+                {'range': [labels[i], labels[i+1]], 'color': colors[i]} for i in range(len(labels)-1)
+            ]
+        }
+    ))
+    config = {
+        'displayModeBar': False
+    }
+
+    st.plotly_chart(fig, use_container_width=True, config=config)
+
+openai_key = st.secrets["secrets"]["OPENAI_KEY"]
+
+tabs = st.tabs(['APRESENTAÇÃO', 'AUTOANÁLISE', 'MENSURAÇÃO', 'PONTUAÇÃO', 'PROGRAMAÇÃO', 'COMPROMISSO', 'RELATÓRIO'])
 
 with tabs[0]:
+    st.image('./images/pegg_header.png')
+    st.title('Desafio do Ontem e do Amanhã')
+    st.subheader('O objetivo deste teste é estimular você para um auto desafio, avaliando como você se comporta quanto o assunto são os 7 Princípios da Educação para Gentileza, Generosidade, Solidariedade, Sustentabilidade, Diversidade, Respeito e Cidadania.')
+    st.subheader('Tem a fase do ontem, quando você mapeia e reflete sobre o que você já fez; o hoje, para você refletir; e a fase do amanhã, quando você planeja o que pretende fazer. O resultado trará uma análise sociocomportamental das suas atitudes, com recomendações muito especiais preparadas por inteligência artificial, em nome de grandes referências no assunto.')
+    st.subheader('**'+'Preparado?'+'**')
+    st.markdown('**'+'Clique na seção "AUTOANÁLISE" para começar!'+'**')
+
+with tabs[1]:
     questions_1 = ['EU FUI GENTIL?', 'EU FUI GENEROSO?', 'EU FUI SUSTENTÁVEL?', 'EU FUI RESPEITOSO?', 'EU AGI COM DIVERSIDADE?', 
                  'EU FUI CIDADÃO?', 'EU FUI SOLIDÁRIO?']
     ratings_1 = []
     st.image('./images/pegg_header.png')
-    st.image('./images/pegg_etapa_1.png')
+    st.subheader('Pensando em suas atitudes durante o dia de ontem, selecione de 0 a 10, em suas respectivas categorias, a quantidade de vezes em que você  colocou em prática, com as pessoas ao seu redor, cada um dos 7PEGG:')
     for q in questions_1:
         ratings_1.append(st.slider("**"+q+"**", min_value=1, max_value=10, step=1))
     df_1 = pd.DataFrame(dict(question=questions_1, rating=ratings_1))
     df_1 = pd.concat([df_1, df_1.iloc[[0]]]).reset_index(drop=True)
-    st.text('Clique na seção "2.MENSURAÇÃO" para visualizar a sua autoanálise sobre o ontem!')
+    st.markdown('**'+'Clique na seção "MENSURAÇÃO" para continuar!'+'**')
 
-with tabs[1]:
+with tabs[2]:
     st.image('./images/pegg_header.png')
-    st.image('./images/pegg_etapa_2.png')
+    st.subheader('Veja o resultado gerado por suas respostas nesta fase diagnóstica e avalie o formato formado de acordo com a legenda:')
     fig_1 = go.Figure()
-    colors = ["red", "blue", "yellow"]
+    colors = ["#FF0000", '#008000', '#FFFF00']
     ranges = [3, 6, 10]
     for r, color in reversed(list(zip(ranges, colors))):
         fig_1.add_trace(go.Scatterpolar(
@@ -40,7 +70,7 @@ with tabs[1]:
         r=df_1['rating'],
         theta=df_1['question'],
         fill='toself',
-        line=dict(width=2, color='#FF1493'),
+        line=dict(width=2, color='#EE7798'),
         fillcolor='rgba(0,0,0,0)',  # Making the fill transparent
     ))
     fig_1.update_layout(
@@ -50,83 +80,72 @@ with tabs[1]:
         showlegend=False,
         dragmode=False
     )
-    st.subheader('RESULTADO DA AUTOANÁLISE')
     st.plotly_chart(fig_1, use_container_width=True, config={'displayModeBar':False})
-
-    st.text('Clique na seção "3.PONTUAÇÃO" para conferir o seu resultado!')
-
-with tabs[2]:
-    score_ontem = calcular_score_ontem(df_1)
-    st.image('./images/pegg_header.png')
-    st.image('./images/pegg_etapa_3.png')
-
-    st.subheader('PONTUAÇÃO OBTIDA')
-    col1, col2 = st.columns(2)
-
-    with col1:
-      st.metric('**'+'ATITUDES SOLIDÁRIAS'+'**', score_ontem['solidarias'])
-      if score_ontem['solidarias'] < 11:
-          st.error('Atenção! Você pode mais, muito mais!') 
-      elif score_ontem['solidarias'] < 21:
-          st.info('Foco! Não desista de fazer a diferença!')
-      elif score_ontem['solidarias'] < 31:
-          st.warning('Parabéns! Continue inspirado e inspirando!')
-
-    with col2:
-      st.metric('**'+'ATITUDES CIDADÃS'+'**', score_ontem['cidadas'])
-      if score_ontem['cidadas'] < 7:
-          st.error('Alerta geral! Melhorar o mundo começa por você!') 
-      elif score_ontem['cidadas'] < 14:
-          st.info('Determinação! Quem persiste sempre alcança!')
-      elif score_ontem['cidadas'] < 21:
-          st.warning('Incrível! Continue sempre assim, e além!')
-
-    col1, col2 = st.columns(2)
-
-    with col1:
-      st.metric('**'+'ATITUDES INCLUSIVAS'+'**', score_ontem['inclusivas'])
-      if score_ontem['inclusivas'] < 11:
-          st.error('Atenção! Você pode mais, muito mais!') 
-      elif score_ontem['inclusivas'] < 21:
-          st.info('Foco! Não desista de fazer a diferença!')
-      elif score_ontem['inclusivas'] < 31:
-          st.warning('Parabéns! Continue inspirado e inspirando!')
-
-    with col2:
-      st.metric('**'+'ATITUDES SUSTENTÁVEIS'+'**', score_ontem['sustentaveis'])
-      if score_ontem['sustentaveis'] < 7:
-          st.error('Alerta geral! Melhorar o mundo começa por você!') 
-      elif score_ontem['sustentaveis'] < 14:
-          st.info('Determinação! Quem persiste sempre alcança!')
-      elif score_ontem['sustentaveis'] < 21:
-          st.warning('Incrível! Continue sempre assim, e além!')
-
-    col1, col2 = st.columns(2)
-    
-    with col1:
-        st.metric('**'+'ATITUDES SOCIOTRANSFORMADORAS'+'**', score_ontem['sociotransformadoras'])
-        if score_ontem['sociotransformadoras'] < 24:
-            st.error('Cuidado! Cuidar do próximo é se cuidar também.') 
-        elif score_ontem['sociotransformadoras'] < 47:
-            st.info('Muito bom! Siga sempre com força de vontade.')
-        elif score_ontem['sociotransformadoras'] < 71:
-            st.warning('Supreendente! Seu exemplo transforma vidas.')
-
-    st.text('Clique na seção "4.PROGRAMAÇÃO" para planejar o seu amanhã!')
+    st.subheader('Sobre o desenho: está despontado ou mais equilibrado? Avalie o que está em alta e o que está em baixa e reflita sobre os motivos.')
+    st.subheader('Sobre a localização dos pontos no gráfico:')
+    st.image('./images/pegg_etapa_2.png')
+    st.markdown('**'+'Clique na seção "PONTUAÇÃO" para continuar!'+'**')
 
 with tabs[3]:
+    score_ontem = calcular_score_ontem(df_1)
+    st.image('./images/pegg_header.png')
+
+    st.subheader('Confira a qualidade das suas atitudes conferindo a tabela e analisando a sua pontuação.')
+
+    plot_gauge(score_ontem['solidarias'], 'ATITUDES SOLIDÁRIAS', 30, [0, 11, 21, 31], ['#FF0000', '#008000', '#FFFF00'])
+    if score_ontem['solidarias'] < 11:
+        st.error('Atenção! Você pode mais, muito mais!') 
+    elif score_ontem['solidarias'] < 21:
+        st.info('Foco! Não desista de fazer a diferença!')
+    elif score_ontem['solidarias'] < 31:
+        st.warning('Parabéns! Continue inspirado e inspirando!')
+    plot_gauge(score_ontem['cidadas'], 'ATITUDES CIDADÃS', 20, [0, 7, 14, 21], ['#FF0000', '#008000', '#FFFF00'])
+    if score_ontem['cidadas'] < 7:
+        st.error('Alerta geral! Melhorar o mundo começa por você!') 
+    elif score_ontem['cidadas'] < 14:
+        st.info('Determinação! Quem persiste sempre alcança!')
+    elif score_ontem['cidadas'] < 21:
+        st.warning('Incrível! Continue sempre assim, e além!')
+    plot_gauge(score_ontem['inclusivas'], 'ATITUDES INCLUSIVAS', 30, [0, 11, 21, 31], ['#FF0000', '#008000', '#FFFF00'])
+    if score_ontem['inclusivas'] < 11:
+        st.error('Atenção! Você pode mais, muito mais!') 
+    elif score_ontem['inclusivas'] < 21:
+        st.info('Foco! Não desista de fazer a diferença!')
+    elif score_ontem['inclusivas'] < 31:
+        st.warning('Parabéns! Continue inspirado e inspirando!')
+    plot_gauge(score_ontem['sustentaveis'], 'ATITUDES SUSTENTÁVEIS', 20, [0, 7, 14, 21], ['#FF0000', '#008000', '#FFFF00'])
+    if score_ontem['sustentaveis'] < 7:
+        st.error('Alerta geral! Melhorar o mundo começa por você!') 
+    elif score_ontem['sustentaveis'] < 14:
+        st.info('Determinação! Quem persiste sempre alcança!')
+    elif score_ontem['sustentaveis'] < 21:
+        st.warning('Incrível! Continue sempre assim, e além!')
+    plot_gauge(score_ontem['sociotransformadoras'], 'ATITUDES SOCIOTRANSFORMADORAS', 70, [0, 24, 47, 71], ['#FF0000', '#008000', '#FFFF00'])
+    if score_ontem['sociotransformadoras'] < 24:
+        st.error('Cuidado! Cuidar do próximo é se cuidar também.') 
+    elif score_ontem['sociotransformadoras'] < 47:
+        st.info('Muito bom! Siga sempre com força de vontade.')
+    elif score_ontem['sociotransformadoras'] < 71:
+        st.warning('Supreendente! Seu exemplo transforma vidas.')
+    
+    st.markdown('**'+'Clique na seção "PROGRAMAÇÃO" para continuar!'+'**')
+
+with tabs[4]:
     questions_4 = ['EU SEREI GENTIL?', 'EU SEREI GENEROSO?', 'EU SEREI SUSTENTÁVEL?', 'EU SEREI RESPEITOSO?', 'EU AGIREI COM DIVERSIDADE?', 
                  'EU SEREI CIDADÃO?', 'EU SEREI SOLIDÁRIO?']
     ratings_4 = []
     st.image('./images/pegg_header.png')
-    st.image('./images/pegg_etapa_4.png')
+    st.subheader('Pensando na sua performance de “ontem”, é a vez de olhar para o amanhã e se programar: selecione de 0 a 10, nas respectivas categorias, a quantidade de vezes em que você vai colocar em prática cada um dos 7PEGG:')
     for q in questions_4:
         ratings_4.append(st.slider("**"+q+"**", min_value=1, max_value=10, step=1))
     df_4 = pd.DataFrame(dict(question=questions_4, rating=ratings_4))
     df_4 = pd.concat([df_4, df_4.iloc[[0]]]).reset_index(drop=True)
 
+    st.markdown('**'+'Clique na seção "COMPROMISSO" para finalizar!'+'**')
+
+with tabs[5]:
     fig_4 = go.Figure()
-    colors = ["red", "blue", "yellow"]
+    colors = ["#FF0000", '#008000', '#FFFF00']
     ranges = [3, 6, 10]
     for r, color in reversed(list(zip(ranges, colors))):
         fig_4.add_trace(go.Scatterpolar(
@@ -141,7 +160,7 @@ with tabs[3]:
         r=df_4['rating'],
         theta=df_4['question'],
         fill='toself',
-        line=dict(width=2, color='#FF1493'),
+        line=dict(width=2, color='#EE7798'),
         fillcolor='rgba(0,0,0,0)',  # Making the fill transparent
     ))
     fig_4.update_layout(
@@ -151,33 +170,46 @@ with tabs[3]:
         showlegend=False,
         dragmode=False
     )
-    st.subheader('RESULTADO DA PROGAMAÇÃO')
-    st.plotly_chart(fig_4, use_container_width=True, config={'displayModeBar':False})
-
-    st.text('Clique na seção "5.COMPROMISSO" para comparar o seu ontem com o seu amanhã!')
-
-with tabs[4]:
+    score_amanha = calcular_score_amanha(df_4)
     st.image('./images/pegg_header.png')
-
-    st.subheader('COMO FUI ONTEM?')
+    st.subheader('Confira o seu “antes e depois” e coloque em prática estas atitudes no seu dia a dia. Mudanças de hábitos demandam perseverança e disciplina — e você consegue.')
     st.plotly_chart(fig_1, use_container_width=True, config={'displayModeBar':False})
-    st.subheader('COMO SEREI AMANHÃ?')
     st.plotly_chart(fig_4, use_container_width=True, config={'displayModeBar':False})
+    st.markdown('**'+'Clique na seção "RELATÓRIO" para criar um resultado personalizado!'+'**')
+    #st.subheader('Precisando de um incentivo maior? Clique abaixo e receba uma mensagem gerada por inteligência artificial, em nome de grandes referências no assunto.')
 
-    st.text('Clique na seção "6.RELATÓRIO" caso queira gerar um resultado personalizado!')
 
-with tabs[5]:
+with tabs[6]:
+    st.subheader('Preencha o cadastro para baixar este relatório em formato PDF.')
     with st.form("form_relatorio"):
         name = st.text_input("Nome")
-        email = st.text_input("Email")  
-        submitted = st.form_submit_button("Enviar")
+        email = st.text_input("Email")
+        message_creator = st.selectbox("Quem você gostaria que escrevesse a sua mensagem?", ['Gandhi', 
+                                                                                             'Irmã Dulce', 
+                                                                                             'Madre Teresa de Calcutá',
+                                                                                             'Muhammad Yunus',
+                                                                                             'Profeta Gentileza',
+                                                                                             'Nelson Mandela',
+                                                                                             'Wangari Maathai'])  
+        submitted = st.form_submit_button("Enviar!")
     
     if submitted:
-        st.success("Dados enviados!")
+        st.success('Dados enviados. Aguarde a criação do relatório, assim que terminar, clique em "Baixar o PDF"!')
         with open('./images/pegg_header.png', 'rb') as f:
             header_img = f.read()
         header_base64 = base64.b64encode(header_img).decode('utf-8')
         fig_1_base64 = base64.b64encode(fig_1.to_image(format="png")).decode('utf-8') 
         fig_4_base64 = base64.b64encode(fig_4.to_image(format="png")).decode('utf-8')
-        relatorio = generate_pdf(header_base64, fig_1_base64, fig_4_base64)
-        st.components.v1.html(relatorio, height=500, scrolling=True)
+        
+        score_ontem_text = str(score_ontem).replace('{', '').replace('}', '')
+        score_amanha_text = str(score_amanha).replace('{', '').replace('}', '')
+
+        generator = PDFGenerator(openai_key)
+        pdf_stream = generator.generate_pdf(header_base64, fig_1_base64, fig_4_base64, score_ontem, score_amanha, message_creator)
+
+        st.download_button(
+             label="Baixar o PDF",
+             data=pdf_stream,
+             file_name=f"{name}.pdf",
+             mime="application/pdf",
+         )
