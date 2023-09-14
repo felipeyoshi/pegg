@@ -50,7 +50,7 @@ with tabs[1]:
         showlegend=False
     )
     st.subheader('RESULTADO DA AUTOANÁLISE')
-    st.plotly_chart(fig_1, use_container_width=True)
+    st.plotly_chart(fig_1, use_container_width=True, config={'displayModeBar':False})
 
     st.text('Clique na seção "3.PONTUAÇÃO" para conferir o seu resultado!')
 
@@ -150,7 +150,7 @@ with tabs[3]:
         showlegend=False
     )
     st.subheader('RESULTADO DA PROGAMAÇÃO')
-    st.plotly_chart(fig_4, use_container_width=True)
+    st.plotly_chart(fig_4, use_container_width=True, config={'displayModeBar':False})
 
     st.text('Clique na seção "5.COMPROMISSO" para comparar o seu ontem com o seu amanhã!')
 
@@ -158,9 +158,9 @@ with tabs[4]:
     st.image('./images/pegg_header.png')
 
     st.subheader('COMO FUI ONTEM?')
-    st.plotly_chart(fig_1, use_container_width=True)
+    st.plotly_chart(fig_1, use_container_width=True, config={'displayModeBar':False})
     st.subheader('COMO SEREI AMANHÃ?')
-    st.plotly_chart(fig_4, use_container_width=True)
+    st.plotly_chart(fig_4, use_container_width=True, config={'displayModeBar':False})
 
     st.text('Clique na seção "6.RELATÓRIO" caso queira gerar um resultado personalizado!')
 
