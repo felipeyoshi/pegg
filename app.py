@@ -55,7 +55,7 @@ with tabs[2]:
     st.image('./images/pegg_header.png')
     st.subheader('Veja o resultado gerado por suas respostas nesta fase diagnóstica e avalie o formato formado de acordo com a legenda:')
     fig_1 = go.Figure()
-    colors = ["#FF0000", '#008000', '#FFFF00']
+    colors = ["#FF0000",'#FFFF00', '#008000']
     ranges = [3, 6, 10]
     for r, color in reversed(list(zip(ranges, colors))):
         fig_1.add_trace(go.Scatterpolar(
@@ -82,8 +82,28 @@ with tabs[2]:
     )
     st.plotly_chart(fig_1, use_container_width=True, config={'displayModeBar':False})
     st.subheader('Sobre o desenho: está despontado ou mais equilibrado? Avalie o que está em alta e o que está em baixa e reflita sobre os motivos.')
+    col1, col2 = st.columns(2)
+    with col1:
+        st.image('./images/pegg_disco_1.png')
+    with col2:
+        st.markdown('')
+        st.markdown('')
+        st.markdown('')
+        st.markdown('')
+        st.markdown('')
+        st.markdown('**- Desenhos mais desapontados:** avaliar o que está em alta e o que está em baixa e refletir sobre os motivos.')
+        st.markdown('**- Desenhos mais equilibrados:** estou mais equilibrado para o centro do círculo ou para as bordas.')
     st.subheader('Sobre a localização dos pontos no gráfico:')
-    st.image('./images/pegg_etapa_2.png')
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        st.image('./images/pegg_disco_2.png')
+        st.markdown('Preciso repensar a qualidade das minhas atitudes.')
+    with col2:
+        st.image('./images/pegg_disco_3.png')
+        st.markdown('Posso atuar de forma melhor e buscar modelos de inspiração.')
+    with col3:
+        st.image('./images/pegg_disco_4.png')
+        st.markdown('Estou indo bem e preciso me manter assim, inspirando as pessoas ao meu redor.')
     st.markdown('**'+'Clique na seção "PONTUAÇÃO" para continuar!'+'**')
 
 with tabs[3]:
@@ -92,41 +112,47 @@ with tabs[3]:
 
     st.subheader('Confira a qualidade das suas atitudes conferindo a tabela e analisando a sua pontuação.')
 
-    plot_gauge(score_ontem['solidarias'], 'ATITUDES SOLIDÁRIAS', 30, [0, 11, 21, 31], ['#FF0000', '#008000', '#FFFF00'])
+    plot_gauge(score_ontem['solidarias'], 'ATITUDES SOLIDÁRIAS', 30, [0, 11, 21, 31], ['#FF0000', '#FFFF00', '#008000'])
+    st.text('ATITUDES SOLIDÁRIAS = GENTILEZA + GENEROSIDADE + SOLIDARIEDADE')
     if score_ontem['solidarias'] < 11:
         st.error('Atenção! Você pode mais, muito mais!') 
     elif score_ontem['solidarias'] < 21:
-        st.info('Foco! Não desista de fazer a diferença!')
+        st.warning('Foco! Não desista de fazer a diferença!')
     elif score_ontem['solidarias'] < 31:
-        st.warning('Parabéns! Continue inspirado e inspirando!')
-    plot_gauge(score_ontem['cidadas'], 'ATITUDES CIDADÃS', 20, [0, 7, 14, 21], ['#FF0000', '#008000', '#FFFF00'])
+        st.success('Parabéns! Continue inspirado e inspirando!')
+    plot_gauge(score_ontem['cidadas'], 'ATITUDES CIDADÃS', 20, [0, 7, 14, 21], ['#FF0000', '#FFFF00', '#008000'])
+    st.text('ATITUDES CIDADÃS = RESPEITO + CIDADANIA')
     if score_ontem['cidadas'] < 7:
         st.error('Alerta geral! Melhorar o mundo começa por você!') 
     elif score_ontem['cidadas'] < 14:
-        st.info('Determinação! Quem persiste sempre alcança!')
+        st.warning('Determinação! Quem persiste sempre alcança!')
     elif score_ontem['cidadas'] < 21:
-        st.warning('Incrível! Continue sempre assim, e além!')
-    plot_gauge(score_ontem['inclusivas'], 'ATITUDES INCLUSIVAS', 30, [0, 11, 21, 31], ['#FF0000', '#008000', '#FFFF00'])
+        st.sucess('Incrível! Continue sempre assim, e além!')
+    plot_gauge(score_ontem['inclusivas'], 'ATITUDES INCLUSIVAS', 30, [0, 11, 21, 31], ['#FF0000', '#FFFF00', '#008000'])
+    st.text('ATITUDES INCLUSIVAS = DIVERSIDADE + RESPEITO + GENTILEZA')
     if score_ontem['inclusivas'] < 11:
         st.error('Atenção! Você pode mais, muito mais!') 
     elif score_ontem['inclusivas'] < 21:
-        st.info('Foco! Não desista de fazer a diferença!')
+        st.warning('Foco! Não desista de fazer a diferença!')
     elif score_ontem['inclusivas'] < 31:
-        st.warning('Parabéns! Continue inspirado e inspirando!')
-    plot_gauge(score_ontem['sustentaveis'], 'ATITUDES SUSTENTÁVEIS', 20, [0, 7, 14, 21], ['#FF0000', '#008000', '#FFFF00'])
+        st.sucess('Parabéns! Continue inspirado e inspirando!')
+    plot_gauge(score_ontem['sustentaveis'], 'ATITUDES SUSTENTÁVEIS', 20, [0, 7, 14, 21], ['#FF0000', '#FFFF00', '#008000'])
+    st.text('ATITUDES SUSTENTÁVEIS = SUSTENTABILIDADE + CIDADANIA')
     if score_ontem['sustentaveis'] < 7:
         st.error('Alerta geral! Melhorar o mundo começa por você!') 
     elif score_ontem['sustentaveis'] < 14:
-        st.info('Determinação! Quem persiste sempre alcança!')
+        st.warning('Determinação! Quem persiste sempre alcança!')
     elif score_ontem['sustentaveis'] < 21:
-        st.warning('Incrível! Continue sempre assim, e além!')
-    plot_gauge(score_ontem['sociotransformadoras'], 'ATITUDES SOCIOTRANSFORMADORAS', 70, [0, 24, 47, 71], ['#FF0000', '#008000', '#FFFF00'])
+        st.success('Incrível! Continue sempre assim, e além!')
+    plot_gauge(score_ontem['sociotransformadoras'], 'ATITUDES SOCIOTRANSFORMADORAS', 70, [0, 24, 47, 71], ['#FF0000', '#FFFF00', '#008000'])
+    st.text('ATITUDES SOCIOTRANSFORMADORAS = GENTILEZA + GENEROSIDADE + SOLIDARIEDADE +') 
+    st.text('+ SUSTENTABILIDADE + DIVERSIDADE + RESPEITO + CIDADANIA')
     if score_ontem['sociotransformadoras'] < 24:
         st.error('Cuidado! Cuidar do próximo é se cuidar também.') 
     elif score_ontem['sociotransformadoras'] < 47:
-        st.info('Muito bom! Siga sempre com força de vontade.')
+        st.warning('Muito bom! Siga sempre com força de vontade.')
     elif score_ontem['sociotransformadoras'] < 71:
-        st.warning('Supreendente! Seu exemplo transforma vidas.')
+        st.success('Supreendente! Seu exemplo transforma vidas.')
     
     st.markdown('**'+'Clique na seção "PROGRAMAÇÃO" para continuar!'+'**')
 
@@ -145,7 +171,7 @@ with tabs[4]:
 
 with tabs[5]:
     fig_4 = go.Figure()
-    colors = ["#FF0000", '#008000', '#FFFF00']
+    colors = ["#FF0000", '#FFFF00', '#008000']
     ranges = [3, 6, 10]
     for r, color in reversed(list(zip(ranges, colors))):
         fig_4.add_trace(go.Scatterpolar(
@@ -173,7 +199,9 @@ with tabs[5]:
     score_amanha = calcular_score_amanha(df_4)
     st.image('./images/pegg_header.png')
     st.subheader('Confira o seu “antes e depois” e coloque em prática estas atitudes no seu dia a dia. Mudanças de hábitos demandam perseverança e disciplina — e você consegue.')
+    st.markdown('#### Ontem')
     st.plotly_chart(fig_1, use_container_width=True, config={'displayModeBar':False})
+    st.markdown('#### Amanhã')
     st.plotly_chart(fig_4, use_container_width=True, config={'displayModeBar':False})
     st.markdown('**'+'Clique na seção "RELATÓRIO" para criar um resultado personalizado!'+'**')
     #st.subheader('Precisando de um incentivo maior? Clique abaixo e receba uma mensagem gerada por inteligência artificial, em nome de grandes referências no assunto.')
@@ -188,7 +216,6 @@ with tabs[6]:
                                                                                              'Gandhi', 
                                                                                              'Irmã Dulce', 
                                                                                              'Madre Teresa de Calcutá',
-                                                                                             'Muhammad Yunus',
                                                                                              'Profeta Gentileza',
                                                                                              'Nelson Mandela',
                                                                                              'Wangari Maathai'],
