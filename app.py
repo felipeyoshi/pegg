@@ -127,7 +127,7 @@ with tabs[3]:
     elif score_ontem['cidadas'] < 14:
         st.warning('Determinação! Quem persiste sempre alcança!')
     elif score_ontem['cidadas'] < 21:
-        st.sucess('Incrível! Continue sempre assim, e além!')
+        st.success('Incrível! Continue sempre assim, e além!')
     plot_gauge(score_ontem['inclusivas'], 'ATITUDES INCLUSIVAS', 30, [0, 11, 21, 31], ['#FF0000', '#FFFF00', '#008000'])
     st.text('ATITUDES INCLUSIVAS = DIVERSIDADE + RESPEITO + GENTILEZA')
     if score_ontem['inclusivas'] < 11:
@@ -135,7 +135,7 @@ with tabs[3]:
     elif score_ontem['inclusivas'] < 21:
         st.warning('Foco! Não desista de fazer a diferença!')
     elif score_ontem['inclusivas'] < 31:
-        st.sucess('Parabéns! Continue inspirado e inspirando!')
+        st.success('Parabéns! Continue inspirado e inspirando!')
     plot_gauge(score_ontem['sustentaveis'], 'ATITUDES SUSTENTÁVEIS', 20, [0, 7, 14, 21], ['#FF0000', '#FFFF00', '#008000'])
     st.text('ATITUDES SUSTENTÁVEIS = SUSTENTABILIDADE + CIDADANIA')
     if score_ontem['sustentaveis'] < 7:
