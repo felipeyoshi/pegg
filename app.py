@@ -32,7 +32,7 @@ openai_key = st.secrets["secrets"]["OPENAI_KEY"]
 tabs = st.tabs(['APRESENTAÇÃO', 'AUTOANÁLISE', 'MENSURAÇÃO', 'PONTUAÇÃO', 'PROGRAMAÇÃO', 'COMPROMISSO', 'RELATÓRIO'])
 
 with tabs[0]:
-    st.image('./images/pegg_header.png')
+    st.image('./images/pegg_intro_header.png')
     st.title('Desafio do Ontem e do Amanhã')
     st.subheader('O objetivo deste teste é estimular você para um auto desafio, avaliando como você se comporta quanto o assunto são os 7 Princípios da Educação para Gentileza, Generosidade, Solidariedade, Sustentabilidade, Diversidade, Respeito e Cidadania.')
     st.subheader('Tem a fase do ontem, quando você mapeia e reflete sobre o que você já fez; o hoje, para você refletir; e a fase do amanhã, quando você planeja o que pretende fazer. O resultado trará uma análise sociocomportamental das suas atitudes, com recomendações muito especiais preparadas por inteligência artificial, em nome de grandes referências no assunto.')
@@ -184,13 +184,15 @@ with tabs[6]:
     with st.form("form_relatorio"):
         name = st.text_input("Nome")
         email = st.text_input("Email")
-        message_creator = st.selectbox("Quem você gostaria que escrevesse a sua mensagem?", ['Gandhi', 
+        message_creator = st.selectbox("Quem você gostaria que escrevesse a sua mensagem?", ['',
+                                                                                             'Gandhi', 
                                                                                              'Irmã Dulce', 
                                                                                              'Madre Teresa de Calcutá',
                                                                                              'Muhammad Yunus',
                                                                                              'Profeta Gentileza',
                                                                                              'Nelson Mandela',
-                                                                                             'Wangari Maathai'])  
+                                                                                             'Wangari Maathai'],
+                                                                                             index = 0)  
         submitted = st.form_submit_button("Enviar!")
     
     if submitted:

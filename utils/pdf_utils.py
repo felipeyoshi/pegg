@@ -36,7 +36,7 @@ class PDFGenerator:
                 </style>
             </head>
             <body>
-                <img src="data:image/png;base64, {header_base64}" width="960">
+                <img src="data:image/png;base64, {header_base64}" width="980">
                 
                 <div class="figures-container">
                     <div class="figure">
@@ -51,6 +51,9 @@ class PDFGenerator:
                 </div>
                 <h2>Mensagem</h2>
                 <p>{message_content}</p>
+                <footer>
+                    <p>Nota: A mensagem neste documento foi gerada pelo ChatGPT da OpenAI. Ela é produto de uma inteligência artificial e representa uma criação simulada baseada nos parâmetros fornecidos.</p>
+                </footer>
             </body>
         </html>
         '''
