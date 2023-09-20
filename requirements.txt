@@ -1,4 +1,5 @@
 kaleido
+mysql-connector-python
 openai
 pandas
 pdfkit

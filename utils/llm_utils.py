@@ -3,7 +3,7 @@ from utils.openai_utils import LLM
 import io
 import pdfkit
 
-class PDFGenerator:
+class ReportGenerator:
 
     def __init__(self, openai_key):
         self.openai_key = openai_key
@@ -16,7 +16,7 @@ class PDFGenerator:
         mensagem_final = llm.get_completion(message)
         return mensagem_final
 
-    def generate_pdf(self, header_base64, fig1_base64, fig2_base64, score_ontem, score_amanha, message_creator):
+    def generate_html(self, header_base64, fig1_base64, fig2_base64, score_ontem, score_amanha, message_creator):
         message_content = self.generate_message(score_ontem, score_amanha, message_creator)
         html = f'''
         <html>

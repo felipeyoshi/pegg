@@ -4,7 +4,9 @@ import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 from io import BytesIO
-from utils.pdf_utils import PDFGenerator
+from utils.mysql_utils import insert_form_data
+from utils.llm_utils import ReportGenerator
+from utils.smtp_utils import send_email
 from utils.score_utils import calcular_score_ontem, calcular_score_amanha
 
 def plot_gauge(score, title, max_val, labels, colors):
@@ -63,7 +65,7 @@ with tabs[2]:
             theta=df_1['question'],
             fill='toself',
             fillcolor=color,
-            line=dict(width=2, color='white'),  # Adding white circular contour
+            line=dict(width=2, color='white'),
             opacity=0.5,
         ))
     fig_1.add_trace(go.Scatterpolar(
@@ -71,7 +73,7 @@ with tabs[2]:
         theta=df_1['question'],
         fill='toself',
         line=dict(width=2, color='#EE7798'),
-        fillcolor='rgba(0,0,0,0)',  # Making the fill transparent
+        fillcolor='rgba(0,0,0,0)',
     ))
     fig_1.update_layout(
         polar=dict(
@@ -179,7 +181,7 @@ with tabs[5]:
             theta=df_4['question'],
             fill='toself',
             fillcolor=color,
-            line=dict(width=2, color='white'),  # Adding white circular contour
+            line=dict(width=2, color='white'),
             opacity=0.5,
         ))
     fig_4.add_trace(go.Scatterpolar(
@@ -187,7 +189,7 @@ with tabs[5]:
         theta=df_4['question'],
         fill='toself',
         line=dict(width=2, color='#EE7798'),
-        fillcolor='rgba(0,0,0,0)',  # Making the fill transparent
+        fillcolor='rgba(0,0,0,0)',
     ))
     fig_4.update_layout(
         polar=dict(
@@ -203,15 +205,22 @@ with tabs[5]:
     st.plotly_chart(fig_1, use_container_width=True, config={'displayModeBar':False})
     st.markdown('#### Amanhã')
     st.plotly_chart(fig_4, use_container_width=True, config={'displayModeBar':False})
-    st.markdown('**'+'Clique na seção "RELATÓRIO" para criar um resultado personalizado!'+'**')
-    #st.subheader('Precisando de um incentivo maior? Clique abaixo e receba uma mensagem gerada por inteligência artificial, em nome de grandes referências no assunto.')
-
+    st.subheader('Precisando de um incentivo maior? Receba uma mensagem gerada por inteligência artificial, em nome de grandes referências no assunto.')
+    st.markdown('**'+'Clique na seção "RELATÓRIO" para criar o relatório personalizado!'+'**')
 
 with tabs[6]:
-    st.subheader('Preencha o cadastro para baixar este relatório em formato PDF.')
+    st.subheader('Preencha o cadastro e receba este relatório em seu e-mail.')
     with st.form("form_relatorio"):
-        name = st.text_input("Nome")
-        email = st.text_input("Email")
+        first_name = st.text_input("* Nome")
+        last_name = st.text_input("* Sobrenome")
+        company = st.text_input("* Nome da Empresa")
+        role = st.text_input("* Cargo")
+        email = st.text_input("* Email")
+        birth_date = st.text_input("* Data de Nascimento")
+        city = st.text_input("* Cidade")
+        state = st.text_input("* Estado")
+        terms = st.checkbox('Li e aceito os Termos de Uso')
+        news = st.checkbox('Eu quero receber novidades e outras informações')
         message_creator = st.selectbox("Quem você gostaria que escrevesse a sua mensagem?", ['',
                                                                                              'Gandhi', 
                                                                                              'Irmã Dulce', 
@@ -222,23 +231,42 @@ with tabs[6]:
                                                                                              index = 0)  
         submitted = st.form_submit_button("Enviar!")
     
+    with open("./pdf/termos.pdf", "rb") as file:
+            btn = st.download_button(
+                label="Ler os Termos de Uso",
+                data=file,
+                file_name="Termos-e-Condicoes-de-Uso_EGG_2023.pdf",
+                mime="application/pdf"
+                )
+            
     if submitted:
-        st.success('Dados enviados. Aguarde a criação do relatório, assim que terminar, clique em "Baixar o PDF"!')
-        with open('./images/pegg_header.png', 'rb') as f:
-            header_img = f.read()
-        header_base64 = base64.b64encode(header_img).decode('utf-8')
-        fig_1_base64 = base64.b64encode(fig_1.to_image(format="png")).decode('utf-8') 
-        fig_4_base64 = base64.b64encode(fig_4.to_image(format="png")).decode('utf-8')
-        
-        score_ontem_text = str(score_ontem).replace('{', '').replace('}', '')
-        score_amanha_text = str(score_amanha).replace('{', '').replace('}', '')
+        if not (first_name and last_name and company and role and email and birth_date and city and state and terms):
+            st.warning("Por favor, preencha todos os campos obrigatórios.")
+        else:
+            db_credentials = st.secrets["secrets"]
+            #insert_form_data(first_name, last_name, company, role, email, birth_date, city, state, terms, news, message_creator, db_credentials)  
+            st.success('Dados enviados! Aguarde o envio no seu email e caso não encontre em alguns minutos, verifique a Caixa de Spam.') 
+            with open('./images/pegg_header.png', 'rb') as f:
+                header_img = f.read()
+            header_base64 = base64.b64encode(header_img).decode('utf-8')
+            fig_1_base64 = base64.b64encode(fig_1.to_image(format="png")).decode('utf-8') 
+            fig_4_base64 = base64.b64encode(fig_4.to_image(format="png")).decode('utf-8')
+            
+            score_ontem_text = str(score_ontem).replace('{', '').replace('}', '')
+            score_amanha_text = str(score_amanha).replace('{', '').replace('}', '')
 
-        generator = PDFGenerator(openai_key)
-        pdf_stream = generator.generate_pdf(header_base64, fig_1_base64, fig_4_base64, score_ontem, score_amanha, message_creator)
+            smtp_credentials = st.secrets["secrets"]
+            generator = ReportGenerator(openai_key)
+            pdf_stream = generator.generate_html(header_base64, fig_1_base64, fig_4_base64, score_ontem, score_amanha, message_creator)
+            smtp_recipient = email
+            smtp_title = 'GENTILEZA E GENEROSIDADE - Desafio do Ontem e do Amanhã'
+            send_email(smtp_recipient, smtp_title, '', smtp_credentials, pdf_stream)
+            st.subheader('Felizes com a sua participação e dedicação. Agora é hora de somar as energias e transformar este mundo em um lugar melhor para viver e conviver.')
+            st.subheader('Curtiu? Compartilhe o link com quem você sabe que vai gostar ou com quem está precisando se autoanalisar, mas ainda não tinha um teste para isso.')
 
-        st.download_button(
-             label="Baixar o PDF",
-             data=pdf_stream,
-             file_name=f"{name}.pdf",
-             mime="application/pdf",
-         )
+            #st.download_button(
+            #    label="Baixar o PDF",
+            #    data=pdf_stream,
+            #    file_name="teste.pdf",
+            #    mime="application/pdf",
+            #)
