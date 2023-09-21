@@ -4,7 +4,6 @@ import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 import streamlit as st
-from io import BytesIO
 from utils.mysql_utils import insert_form_data
 from utils.llm_utils import ReportGenerator
 from utils.smtp_utils import send_email
@@ -36,6 +35,14 @@ def validate_date_format(date_str):
         return True
     except ValueError:
         return False
+
+EMAIL_BODY = """Parabéns!
+
+Você está recebendo o resultado de seu Teste dos Princípios, desenvolvido pela plataforma de Educação para Gentileza e Generosidade, com o mapeamento das suas atitudes de gentileza, generosidade, solidariedade, sustentabilidade, diversidade, respeito e cidadania, mapeadas no seu ontem e planejadas para o seu amanhã, com dicas especiais geradas por inteligência artificial para inspirar suas atitudes e as pessoas ao seu redor!
+
+Lembrete: para mudarmos o mundo é fundamental conhecimento e autoconhecimento!
+Para saber mais e conhecer metodologias, materiais e ventos específicos para escolas, famílias, jovens, emrpesas e organizações, além de estudos e pesquisas, acesse https://www.gentilezagenerosidade.org.br/
+"""
 
 openai_key = st.secrets["secrets"]["OPENAI_KEY"]
 
@@ -270,6 +277,6 @@ with tabs[6]:
             pdf_stream = generator.generate_html(header_base64, fig_1_base64, fig_4_base64, score_ontem, score_amanha, message_creator)
             smtp_recipient = email
             smtp_title = 'GENTILEZA E GENEROSIDADE - Desafio do Ontem e do Amanhã'
-            send_email(smtp_recipient, smtp_title, '', smtp_credentials, pdf_stream)
+            send_email(smtp_recipient, smtp_title, EMAIL_BODY, smtp_credentials, pdf_stream)
             st.subheader('Felizes com a sua participação e dedicação. Agora é hora de somar as energias e transformar este mundo em um lugar melhor para viver e conviver.')
             st.subheader('Curtiu? Compartilhe o link com quem você sabe que vai gostar ou com quem está precisando se autoanalisar, mas ainda não tinha um teste para isso.')
