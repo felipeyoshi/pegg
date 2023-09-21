@@ -1,8 +1,9 @@
 import base64
-import streamlit as st
+import datetime
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
+import streamlit as st
 from io import BytesIO
 from utils.mysql_utils import insert_form_data
 from utils.llm_utils import ReportGenerator
@@ -29,6 +30,13 @@ def plot_gauge(score, title, max_val, labels, colors):
 
     st.plotly_chart(fig, use_container_width=True, config=config)
 
+def validate_date_format(date_str):
+    try:
+        datetime.datetime.strptime(date_str, '%d/%m/%Y')
+        return True
+    except ValueError:
+        return False
+
 openai_key = st.secrets["secrets"]["OPENAI_KEY"]
 
 tabs = st.tabs(['APRESENTAÇÃO', 'AUTOANÁLISE', 'MENSURAÇÃO', 'PONTUAÇÃO', 'PROGRAMAÇÃO', 'COMPROMISSO', 'RELATÓRIO'])
@@ -36,9 +44,9 @@ tabs = st.tabs(['APRESENTAÇÃO', 'AUTOANÁLISE', 'MENSURAÇÃO', 'PONTUAÇÃO',
 with tabs[0]:
     st.image('./images/pegg_intro_header.png')
     st.title('Desafio do Ontem e do Amanhã')
-    st.subheader('O objetivo deste teste é estimular você para um auto desafio, avaliando como você se comporta quanto o assunto são os 7 Princípios da Educação para Gentileza, Generosidade, Solidariedade, Sustentabilidade, Diversidade, Respeito e Cidadania.')
-    st.subheader('Tem a fase do ontem, quando você mapeia e reflete sobre o que você já fez; o hoje, para você refletir; e a fase do amanhã, quando você planeja o que pretende fazer. O resultado trará uma análise sociocomportamental das suas atitudes, com recomendações muito especiais preparadas por inteligência artificial, em nome de grandes referências no assunto.')
-    st.subheader('**'+'Preparado?'+'**')
+    st.markdown('### O objetivo deste teste, desenvolvido pela plataforma de Educação para Gentileza e Generosidade (https://gentilezagenerosidade.org.br), é estimular você para um auto desafio, avaliando como você se comporta quando o assunto são os 7 Princípios da Educação para Gentileza, Generosidade, Solidariedade, Sustentabilidade, Diversidade, Respeito e Cidadania.')
+    st.markdown('### Tem a fase do ontem, quando você mapeia e reflete sobre o que você já fez; o hoje, para você refletir; e a fase do amanhã, quando você planeja o que pretende fazer. O resultado trará uma análise sociocomportamental das suas atitudes, com recomendações muito especiais preparadas por inteligência artificial, em nome de grandes referências no assunto.')
+    st.markdown('### Preparado?**')
     st.markdown('**'+'Clique na seção "AUTOANÁLISE" para começar!'+'**')
 
 with tabs[1]:
@@ -216,7 +224,9 @@ with tabs[6]:
         company = st.text_input("* Nome da Empresa")
         role = st.text_input("* Cargo")
         email = st.text_input("* Email")
-        birth_date = st.text_input("* Data de Nascimento")
+        birth_date = st.text_input("* Data de Nascimento (DIA/MÊS/ANO)")
+        if birth_date and not validate_date_format(birth_date):
+            st.error("Formato de Data de Nascimento inválido. Por favor, use DIA/MÊS/ANO.")
         city = st.text_input("* Cidade")
         state = st.text_input("* Estado")
         terms = st.checkbox('Li e aceito os Termos de Uso')
@@ -244,7 +254,7 @@ with tabs[6]:
             st.warning("Por favor, preencha todos os campos obrigatórios.")
         else:
             db_credentials = st.secrets["secrets"]
-            #insert_form_data(first_name, last_name, company, role, email, birth_date, city, state, terms, news, message_creator, db_credentials)  
+            insert_form_data(first_name, last_name, company, role, email, birth_date, city, state, terms, news, message_creator, db_credentials)  
             st.success('Dados enviados! Aguarde o envio no seu email e caso não encontre em alguns minutos, verifique a Caixa de Spam.') 
             with open('./images/pegg_header.png', 'rb') as f:
                 header_img = f.read()
@@ -263,10 +273,3 @@ with tabs[6]:
             send_email(smtp_recipient, smtp_title, '', smtp_credentials, pdf_stream)
             st.subheader('Felizes com a sua participação e dedicação. Agora é hora de somar as energias e transformar este mundo em um lugar melhor para viver e conviver.')
             st.subheader('Curtiu? Compartilhe o link com quem você sabe que vai gostar ou com quem está precisando se autoanalisar, mas ainda não tinha um teste para isso.')
-
-            #st.download_button(
-            #    label="Baixar o PDF",
-            #    data=pdf_stream,
-            #    file_name="teste.pdf",
-            #    mime="application/pdf",
-            #)
