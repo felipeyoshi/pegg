@@ -8,6 +8,7 @@ Atitudes Sustentáveis = sustentabilidade + cidadania
 Atitudes Sociotransformadoras = gentileza + generosidade + solidariedade + sustentabilidade + diversidade + respeito + cidadania
 
 Os resultados abaixo são referentes à autoanálise do participante do teste com relação às suas atitudes ontem, e como ele se compromete com o amanhã.
+Somente cite de forma positiva, as avaliações de ontem com avaliação igual ou superior a 7. Compare as avaliações de ontem e amanhã.
 
 Ontem:
 {}
@@ -15,6 +16,6 @@ Ontem:
 Amanhã:
 {}
 
-Sua tarefa é analisar os dados deste teste e criar uma mensagem motivadora. Para criar essa mensagem, imagine que {} está escrevendo esse texto. 
+Sua tarefa é comparar as avaliações entre ontem e amnhã deste teste e criar uma mensagem motivadora. Para criar essa mensagem, imagine que {} está escrevendo esse texto. 
 
 """
