@@ -41,7 +41,7 @@ EMAIL_BODY = """Parabéns!
 Você está recebendo o resultado de seu Teste dos Princípios, desenvolvido pela plataforma de Educação para Gentileza e Generosidade, com o mapeamento das suas atitudes de gentileza, generosidade, solidariedade, sustentabilidade, diversidade, respeito e cidadania, mapeadas no seu ontem e planejadas para o seu amanhã, com dicas especiais geradas por inteligência artificial para inspirar suas atitudes e as pessoas ao seu redor!
 
 Lembrete: para mudarmos o mundo é fundamental conhecimento e autoconhecimento!
-Para saber mais e conhecer metodologias, materiais e ventos específicos para escolas, famílias, jovens, emrpesas e organizações, além de estudos e pesquisas, acesse https://www.gentilezagenerosidade.org.br/
+Para saber mais e conhecer metodologias, materiais e ventos específicos para escolas, famílias, jovens, empresas e organizações, além de estudos e pesquisas, acesse https://www.gentilezagenerosidade.org.br/
 """
 
 openai_key = st.secrets["secrets"]["OPENAI_KEY"]
@@ -262,7 +262,7 @@ with tabs[6]:
         else:
             db_credentials = st.secrets["secrets"]
             insert_form_data(first_name, last_name, company, role, email, birth_date, city, state, terms, news, message_creator, db_credentials)  
-            st.success('Dados enviados! Aguarde o envio no seu email e caso não encontre em alguns minutos, verifique a Caixa de Spam.') 
+            st.success('Dados enviados! Aguarde a finalização do relatório e envio para o seu email e caso não encontre em alguns minutos, verifique a Caixa de Spam.') 
             with open('./images/pegg_header.png', 'rb') as f:
                 header_img = f.read()
             header_base64 = base64.b64encode(header_img).decode('utf-8')
