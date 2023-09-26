@@ -26,8 +26,8 @@ def plot_gauge(score, title, max_val, labels, colors):
     config = {
         'displayModeBar': False
     }
-
     st.plotly_chart(fig, use_container_width=True, config=config)
+    return fig
 
 def validate_date_format(date_str):
     try:
@@ -129,7 +129,7 @@ with tabs[3]:
 
     st.subheader('Confira a qualidade das suas atitudes conferindo a tabela e analisando a sua pontuação.')
 
-    plot_gauge(score_ontem['solidarias'], 'ATITUDES SOLIDÁRIAS', 30, [0, 11, 21, 31], ['#FF0000', '#FFFF00', '#008000'])
+    gauge1 = plot_gauge(score_ontem['solidarias'], 'ATITUDES SOLIDÁRIAS', 30, [0, 11, 21, 31], ['#FF0000', '#FFFF00', '#008000'])
     st.text('ATITUDES SOLIDÁRIAS = GENTILEZA + GENEROSIDADE + SOLIDARIEDADE')
     if score_ontem['solidarias'] < 11:
         st.error('Atenção! Você pode mais, muito mais!') 
@@ -137,7 +137,7 @@ with tabs[3]:
         st.warning('Foco! Não desista de fazer a diferença!')
     elif score_ontem['solidarias'] < 31:
         st.success('Parabéns! Continue inspirado e inspirando!')
-    plot_gauge(score_ontem['cidadas'], 'ATITUDES CIDADÃS', 20, [0, 7, 14, 21], ['#FF0000', '#FFFF00', '#008000'])
+    gauge2 = plot_gauge(score_ontem['cidadas'], 'ATITUDES CIDADÃS', 20, [0, 7, 14, 21], ['#FF0000', '#FFFF00', '#008000'])
     st.text('ATITUDES CIDADÃS = RESPEITO + CIDADANIA')
     if score_ontem['cidadas'] < 7:
         st.error('Alerta geral! Melhorar o mundo começa por você!') 
@@ -145,7 +145,7 @@ with tabs[3]:
         st.warning('Determinação! Quem persiste sempre alcança!')
     elif score_ontem['cidadas'] < 21:
         st.success('Incrível! Continue sempre assim, e além!')
-    plot_gauge(score_ontem['inclusivas'], 'ATITUDES INCLUSIVAS', 30, [0, 11, 21, 31], ['#FF0000', '#FFFF00', '#008000'])
+    gauge3 = plot_gauge(score_ontem['inclusivas'], 'ATITUDES INCLUSIVAS', 30, [0, 11, 21, 31], ['#FF0000', '#FFFF00', '#008000'])
     st.text('ATITUDES INCLUSIVAS = DIVERSIDADE + RESPEITO + GENTILEZA')
     if score_ontem['inclusivas'] < 11:
         st.error('Atenção! Você pode mais, muito mais!') 
@@ -153,7 +153,7 @@ with tabs[3]:
         st.warning('Foco! Não desista de fazer a diferença!')
     elif score_ontem['inclusivas'] < 31:
         st.success('Parabéns! Continue inspirado e inspirando!')
-    plot_gauge(score_ontem['sustentaveis'], 'ATITUDES SUSTENTÁVEIS', 20, [0, 7, 14, 21], ['#FF0000', '#FFFF00', '#008000'])
+    gauge4 = plot_gauge(score_ontem['sustentaveis'], 'ATITUDES SUSTENTÁVEIS', 20, [0, 7, 14, 21], ['#FF0000', '#FFFF00', '#008000'])
     st.text('ATITUDES SUSTENTÁVEIS = SUSTENTABILIDADE + CIDADANIA')
     if score_ontem['sustentaveis'] < 7:
         st.error('Alerta geral! Melhorar o mundo começa por você!') 
@@ -161,7 +161,7 @@ with tabs[3]:
         st.warning('Determinação! Quem persiste sempre alcança!')
     elif score_ontem['sustentaveis'] < 21:
         st.success('Incrível! Continue sempre assim, e além!')
-    plot_gauge(score_ontem['sociotransformadoras'], 'ATITUDES SOCIOTRANSFORMADORAS', 70, [0, 24, 47, 71], ['#FF0000', '#FFFF00', '#008000'])
+    gauge5 = plot_gauge(score_ontem['sociotransformadoras'], 'ATITUDES SOCIOTRANSFORMADORAS', 70, [0, 24, 47, 71], ['#FF0000', '#FFFF00', '#008000'])
     st.text('ATITUDES SOCIOTRANSFORMADORAS = GENTILEZA + GENEROSIDADE + SOLIDARIEDADE +') 
     st.text('+ SUSTENTABILIDADE + DIVERSIDADE + RESPEITO + CIDADANIA')
     if score_ontem['sociotransformadoras'] < 24:
@@ -170,7 +170,13 @@ with tabs[3]:
         st.warning('Muito bom! Siga sempre com força de vontade.')
     elif score_ontem['sociotransformadoras'] < 71:
         st.success('Supreendente! Seu exemplo transforma vidas.')
-    
+
+    gauge1_base64 = base64.b64encode(gauge1.to_image(format="png")).decode('utf-8')
+    gauge2_base64 = base64.b64encode(gauge2.to_image(format="png")).decode('utf-8')
+    gauge3_base64 = base64.b64encode(gauge3.to_image(format="png")).decode('utf-8')
+    gauge4_base64 = base64.b64encode(gauge4.to_image(format="png")).decode('utf-8')
+    gauge5_base64 = base64.b64encode(gauge5.to_image(format="png")).decode('utf-8')
+
     st.markdown('**'+'Clique na seção "PROGRAMAÇÃO" para continuar!'+'**')
 
 with tabs[4]:
@@ -262,7 +268,7 @@ with tabs[6]:
         else:
             db_credentials = st.secrets["secrets"]
             insert_form_data(first_name, last_name, company, role, email, birth_date, city, state, terms, news, message_creator, db_credentials)  
-            st.success('Dados enviados! Aguarde a finalização do relatório e envio para o seu email e caso não encontre em alguns minutos, verifique a Caixa de Spam.') 
+            st.success('Dados enviados! Aguarde a finalização do relatório e envio para o seu email. Caso não encontre em alguns minutos, verifique a Caixa de Spam.') 
             with open('./images/pegg_header.png', 'rb') as f:
                 header_img = f.read()
             header_base64 = base64.b64encode(header_img).decode('utf-8')
@@ -274,7 +280,7 @@ with tabs[6]:
 
             smtp_credentials = st.secrets["secrets"]
             generator = ReportGenerator(openai_key)
-            pdf_stream = generator.generate_html(header_base64, fig_1_base64, fig_4_base64, score_ontem, score_amanha, message_creator)
+            pdf_stream = generator.generate_html(header_base64, fig_1_base64, fig_4_base64, gauge1_base64, gauge2_base64, gauge3_base64, gauge4_base64, gauge5_base64, score_ontem, score_amanha, message_creator)
             smtp_recipient = email
             smtp_title = 'GENTILEZA E GENEROSIDADE - Desafio do Ontem e do Amanhã'
             send_email(smtp_recipient, smtp_title, EMAIL_BODY, smtp_credentials, pdf_stream)

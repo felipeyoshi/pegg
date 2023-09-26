@@ -16,7 +16,7 @@ class ReportGenerator:
         mensagem_final = llm.get_completion(message)
         return mensagem_final
 
-    def generate_html(self, header_base64, fig1_base64, fig2_base64, score_ontem, score_amanha, message_creator):
+    def generate_html(self, header_base64, fig1_base64, fig2_base64, gauge1_base64, gauge2_base64, gauge3_base64, gauge4_base64, gauge5_base64, score_ontem, score_amanha, message_creator):
         message_content = self.generate_message(score_ontem, score_amanha, message_creator)
         html = f'''
         <html>
@@ -25,14 +25,13 @@ class ReportGenerator:
                     body, h2, p {{
                         font-family: "Arial", sans-serif;
                     }}
-                    .figures-container {{
+                    .figures-container, .gauges-container {{
                         display: flex;
-                        justify-content: space-between;
                     }}
-                    .figure {{
-                        margin: 0 10px; /* Add some spacing between the images */
-                        text-align: center; /* Center the heading relative to the image */
-                    }}
+                    .figure, .gauge {{
+                        margin: 0 10px;
+                        text-align: center; 
+                    }}            
                 </style>
             </head>
             <body>
@@ -47,6 +46,25 @@ class ReportGenerator:
                     <div class="figure">
                         <h2>Como serei amanhã?</h2>
                         <img src="data:image/png;base64, {fig2_base64}" width="450">
+                    </div>
+                </div>
+                <div class="gauges-container">
+                    <div class="gauge">
+                        <img src="data:image/png;base64, {gauge1_base64}" width="300">
+                    </div>
+                    <div class="gauge">
+                        <img src="data:image/png;base64, {gauge2_base64}" width="300">
+                    </div>
+                    <div class="gauge">
+                        <img src="data:image/png;base64, {gauge3_base64}" width="300">
+                    </div>
+                </div>
+                <div class="gauges-container">
+                    <div class="gauge">
+                        <img src="data:image/png;base64, {gauge4_base64}" width="300">
+                    </div>
+                    <div class="gauge">
+                        <img src="data:image/png;base64, {gauge5_base64}" width="300">
                     </div>
                 </div>
                 <h2>Mensagem</h2>
