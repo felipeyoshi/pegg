@@ -25,6 +25,9 @@ class ReportGenerator:
                     body, h2, p {{
                         font-family: "Arial", sans-serif;
                     }}
+                    h2 {{
+                        text-align: center;
+                    }}
                     .figures-container, .gauges-container {{
                         display: flex;
                     }}
@@ -48,25 +51,34 @@ class ReportGenerator:
                         <img src="data:image/png;base64, {fig2_base64}" width="450">
                     </div>
                 </div>
+                <h2>Como estão as minhas atitudes?</h2>
                 <div class="gauges-container">
                     <div class="gauge">
                         <img src="data:image/png;base64, {gauge1_base64}" width="300">
+                        <p>ATITUDES SOLIDÁRIAS = GENTILEZA + GENEROSIDADE + SOLIDARIEDADE</p>
                     </div>
                     <div class="gauge">
                         <img src="data:image/png;base64, {gauge2_base64}" width="300">
+                        <p>ATITUDES CIDADÃS = RESPEITO + CIDADANIA</p>
                     </div>
                     <div class="gauge">
                         <img src="data:image/png;base64, {gauge3_base64}" width="300">
+                        <p>ATITUDES INCLUSIVAS = DIVERSIDADE + RESPEITO + GENTILEZA</p>
                     </div>
                 </div>
                 <div class="gauges-container">
                     <div class="gauge">
                         <img src="data:image/png;base64, {gauge4_base64}" width="300">
+                        <p>ATITUDES SUSTENTÁVEIS = SUSTENTABILIDADE + CIDADANIA</p>
                     </div>
                     <div class="gauge">
                         <img src="data:image/png;base64, {gauge5_base64}" width="300">
+                        <p>ATITUDES SOCIOTRANSFORMADORAS = GENTILEZA + GENEROSIDADE + SOLIDARIEDADE + SUSTENTABILIDADE + DIVERSIDADE + RESPEITO + CIDADANIA</p>
                     </div>
                 </div>
+                <br>
+                <br>
+                <br>
                 <h2>Mensagem</h2>
                 <p>{message_content}</p>
                 <footer>
