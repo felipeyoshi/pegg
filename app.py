@@ -234,9 +234,10 @@ with tabs[6]:
     with st.form("form_relatorio"):
         first_name = st.text_input("* Nome")
         last_name = st.text_input("* Sobrenome")
-        company = st.text_input("* Nome da Empresa")
+        main_principle = st.selectbox("COm qual dos 7PEGG você mais se identifica?", ['', 'Gentileza', 'Generosidade', 'Sustentabilidade', 'Respeitabilidade',
+                                                                                       'Diversidade', 'Cidadania', 'Solidariedade'])
         role = st.text_input("* Cargo")
-        email = st.text_input("* Email")
+        email = st.text_input("* Seu melhor email, para receber o resultado do teste e outras novidades")
         birth_date = st.text_input("* Data de Nascimento (DIA/MÊS/ANO)")
         if birth_date and not validate_date_format(birth_date):
             st.error("Formato de Data de Nascimento inválido. Por favor, use DIA/MÊS/ANO.")
@@ -263,11 +264,11 @@ with tabs[6]:
                 )
             
     if submitted:
-        if not (first_name and last_name and company and role and email and birth_date and city and state and terms):
+        if not (first_name and last_name and main_principle and role and email and birth_date and city and state and terms):
             st.warning("Por favor, preencha todos os campos obrigatórios.")
         else:
             db_credentials = st.secrets["secrets"]
-            insert_form_data(first_name, last_name, company, role, email, birth_date, city, state, terms, news, message_creator, db_credentials)  
+            insert_form_data(first_name, last_name, main_principle, role, email, birth_date, city, state, terms, news, message_creator, db_credentials)  
             st.success('Dados enviados! Aguarde a finalização do relatório e envio para o seu email. Caso não encontre em alguns minutos, verifique a Caixa de Spam.') 
             with open('./images/pegg_header.png', 'rb') as f:
                 header_img = f.read()

@@ -15,6 +15,6 @@ Ontem:
 Amanhã:
 {}
 
-Sua tarefa é comparar as avaliações entre ontem e amnhã deste teste e criar uma mensagem motivadora. Para criar essa mensagem, imagine que {} está escrevendo esse texto. 
-
+Sua tarefa é comparar as avaliações entre ontem e amnhã deste teste e criar uma mensagem motivadora. Para criar essa mensagem, imagine que {} está escrevendo esse texto.
+Sempre assine a mensagem ao final.
 """
