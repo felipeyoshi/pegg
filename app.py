@@ -234,7 +234,7 @@ with tabs[6]:
     with st.form("form_relatorio"):
         first_name = st.text_input("* Nome")
         last_name = st.text_input("* Sobrenome")
-        main_principle = st.selectbox("COm qual dos 7PEGG você mais se identifica?", ['', 'Gentileza', 'Generosidade', 'Sustentabilidade', 'Respeitabilidade',
+        main_principle = st.selectbox("Com qual dos 7PEGG você mais se identifica?", ['', 'Gentileza', 'Generosidade', 'Sustentabilidade', 'Respeitabilidade',
                                                                                        'Diversidade', 'Cidadania', 'Solidariedade'])
         role = st.text_input("* Cargo")
         email = st.text_input("* Seu melhor email, para receber o resultado do teste e outras novidades")
