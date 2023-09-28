@@ -236,7 +236,7 @@ with tabs[6]:
         last_name = st.text_input("* Sobrenome")
         main_principle = st.selectbox("Com qual dos 7PEGG você mais se identifica?", ['', 'Gentileza', 'Generosidade', 'Sustentabilidade', 'Respeitabilidade',
                                                                                        'Diversidade', 'Cidadania', 'Solidariedade'])
-        role = st.text_input("* Cargo")
+        role = st.text_input("* Profissão / Atividade Exercida")
         email = st.text_input("* Seu melhor email, para receber o resultado do teste e outras novidades")
         birth_date = st.text_input("* Data de Nascimento (DIA/MÊS/ANO)")
         if birth_date and not validate_date_format(birth_date):
