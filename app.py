@@ -234,13 +234,11 @@ with tabs[6]:
     with st.form("form_relatorio"):
         first_name = st.text_input("* Nome")
         last_name = st.text_input("* Sobrenome")
-        main_principle = st.selectbox("Com qual dos 7PEGG você mais se identifica?", ['', 'Gentileza', 'Generosidade', 'Sustentabilidade', 'Respeitabilidade',
-                                                                                       'Diversidade', 'Cidadania', 'Solidariedade'])
+        main_principle = st.selectbox("Com qual dos 7PEGG você mais se identifica?", ['', 'Gentileza', 'Generosidade', 'Solidariedade', 'Sustentabilidade',
+                                                                                       'Diversidade', 'Respeito', 'Cidadania'])
         role = st.text_input("* Profissão / Atividade Exercida")
         email = st.text_input("* Seu melhor email, para receber o resultado do teste e outras novidades")
         birth_date = st.text_input("* Data de Nascimento (DIA/MÊS/ANO)")
-        if birth_date and not validate_date_format(birth_date):
-            st.error("Formato de Data de Nascimento inválido. Por favor, use DIA/MÊS/ANO.")
         city = st.text_input("* Cidade")
         state = st.text_input("* Estado")
         terms = st.checkbox('Li e aceito os Termos de Uso')
@@ -266,6 +264,8 @@ with tabs[6]:
     if submitted:
         if not (first_name and last_name and main_principle and role and email and birth_date and city and state and terms):
             st.warning("Por favor, preencha todos os campos obrigatórios.")
+        elif birth_date and not validate_date_format(birth_date):
+            st.error("Formato de Data de Nascimento inválido. Por favor, use DIA/MÊS/ANO.")
         else:
             db_credentials = st.secrets["secrets"]
             insert_form_data(first_name, last_name, main_principle, role, email, birth_date, city, state, terms, news, message_creator, db_credentials)  
