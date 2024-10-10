@@ -26,7 +26,7 @@ def plot_gauge(score, title, max_val, labels, colors):
     config = {
         'displayModeBar': False
     }
-    st.plotly_chart(fig, use_container_width=True, config=config, key='key_0')
+    st.plotly_chart(fig, use_container_width=True, config=config, key=title)
     return fig
 
 def validate_date_format(date_str):
