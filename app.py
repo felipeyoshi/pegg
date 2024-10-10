@@ -97,7 +97,7 @@ with tabs[2]:
         showlegend=False,
         dragmode=False
     )
-    st.plotly_chart(fig_1, use_container_width=True, config={'displayModeBar':False}, , key='key_1')
+    st.plotly_chart(fig_1, use_container_width=True, config={'displayModeBar':False}, key='key_1')
     st.subheader('Sobre o desenho: está despontado ou mais equilibrado? Avalie o que está em alta e o que está em baixa e reflita sobre os motivos.')
     col1, col2 = st.columns(2)
     with col1:
