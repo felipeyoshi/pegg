@@ -1,6 +1,6 @@
 kaleido
 mysql-connector-python
-openai
+openai==0.28
 pandas
 pdfkit
 plotly
