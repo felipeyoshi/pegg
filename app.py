@@ -26,7 +26,7 @@ def plot_gauge(score, title, max_val, labels, colors):
     config = {
         'displayModeBar': False
     }
-    st.plotly_chart(fig, use_container_width=True, config=config)
+    st.plotly_chart(fig, use_container_width=True, config=config, , key='key_0')
     return fig
 
 def validate_date_format(date_str):
@@ -97,7 +97,7 @@ with tabs[2]:
         showlegend=False,
         dragmode=False
     )
-    st.plotly_chart(fig_1, use_container_width=True, config={'displayModeBar':False})
+    st.plotly_chart(fig_1, use_container_width=True, config={'displayModeBar':False}, , key='key_1')
     st.subheader('Sobre o desenho: está despontado ou mais equilibrado? Avalie o que está em alta e o que está em baixa e reflita sobre os motivos.')
     col1, col2 = st.columns(2)
     with col1:
@@ -223,9 +223,9 @@ with tabs[5]:
     st.image('./images/pegg_header.png')
     st.subheader('Confira o seu “antes e depois” e coloque em prática estas atitudes no seu dia a dia. Mudanças de hábitos demandam perseverança e disciplina — e você consegue.')
     st.markdown('#### Ontem')
-    st.plotly_chart(fig_1, use_container_width=True, config={'displayModeBar':False})
+    st.plotly_chart(fig_1, use_container_width=True, config={'displayModeBar':False}, key='key_1')
     st.markdown('#### Amanhã')
-    st.plotly_chart(fig_4, use_container_width=True, config={'displayModeBar':False})
+    st.plotly_chart(fig_4, use_container_width=True, config={'displayModeBar':False}, key='key_4')
     st.subheader('Precisando de um incentivo maior? Receba uma mensagem gerada por inteligência artificial, em nome de grandes referências no assunto.')
     st.markdown('**'+'Clique na seção "RELATÓRIO" para criar o relatório personalizado!'+'**')
 
