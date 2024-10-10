@@ -223,7 +223,7 @@ with tabs[5]:
     st.image('./images/pegg_header.png')
     st.subheader('Confira o seu “antes e depois” e coloque em prática estas atitudes no seu dia a dia. Mudanças de hábitos demandam perseverança e disciplina — e você consegue.')
     st.markdown('#### Ontem')
-    st.plotly_chart(fig_1, use_container_width=True, config={'displayModeBar':False}, key='key_1')
+    st.plotly_chart(fig_1, use_container_width=True, config={'displayModeBar':False}, key='key_2')
     st.markdown('#### Amanhã')
     st.plotly_chart(fig_4, use_container_width=True, config={'displayModeBar':False}, key='key_4')
     st.subheader('Precisando de um incentivo maior? Receba uma mensagem gerada por inteligência artificial, em nome de grandes referências no assunto.')
