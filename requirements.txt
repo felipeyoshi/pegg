@@ -3,5 +3,5 @@ mysql-connector-python
 openai==0.28
 pandas
 pdfkit
-plotly
+plotly>=5.18.0
 streamlit
